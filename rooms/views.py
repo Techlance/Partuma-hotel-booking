@@ -3,53 +3,56 @@ from .models import Booked, Rooms
 from datetime import *
 # Create your views here.
 
-
+# end-route : ''
 def home_page(request):
     return render(request, "index.html")
 
+# end-route : check_availability
 def check_availability(request):
     if request.method=="GET":
         return render(request, "check_availability.html")
     else:
+        # Get Data from user
         checkin = request.POST.get('check_in')
         checkout = request.POST.get('check_out')
         print(checkin, checkout)
         
+        # parse date data to compare with dates fetched from database
+        # request_checkin = check-in Date obtained from user using POST request
+        # request_checkout = check-out Date obtained from user using POST request
         request_checkin = date(int(checkin[:4]), int(checkin[5:7]), int(checkin[8:]))
         request_checkout = date(int(checkout[:4]), int(checkout[5:7]), int(checkout[8:]))
+
+        # Query to get all user who booked rooms
         all_booked = Booked.objects.all()
-        room1 = 0
-        room2 = 0
+
+        #
+
+        dict = {}
+        all_rooms = Rooms.objects.all()
+        for i in all_rooms:
+            dict.update({i.id : 0})
+        print(dict)
+
+        # Logic for checking How many room is available between user's demanded date
         for i in all_booked:
-            full_date = i.check_in
-            full_date_1 = i.check_out
-            # temp1 = str(temp.year)
-            # print(temp1)
-            # print(type(temp1))
-            fetched_checkin = date(int(full_date.year), int(str(full_date.month)), int(str(full_date.day)))
-            fetched_checkout = date(int(full_date_1.year), int(str(full_date_1.month)), int(str(full_date_1.day)))
+            full_date_ci = i.check_in  # ci = check in
+            full_date_co = i.check_out # co = check out
+            fetched_checkin = date(int(full_date_ci.year), int(str(full_date_ci.month)), int(str(full_date_ci.day)))
+            fetched_checkout = date(int(full_date_co.year), int(str(full_date_co.month)), int(str(full_date_co.day)))
             print(request_checkin, fetched_checkin, request_checkout, fetched_checkout)
             if (request_checkin < fetched_checkin and request_checkout <= fetched_checkin) or (request_checkin >= fetched_checkout and request_checkout > fetched_checkout):
                 pass
             else:
-                print(i.room_type_id)
-                if i.room_type_id==1:
-                    room1 += 1
-                else:
-                    room2 += 1
-        print(room1)
-        print(room2)
-        all_rooms = Rooms.objects.all()
-        j = 0
+                dict[i.room_type_id] += i.no_of_rooms
+        
+        rem_rooms = {} # Dictionary to store remaining rooms of each type 
         for i in all_rooms:
-            if j==0:
-                print("Available rooms-2", i.room_type, i.no_of_rooms-room2)
-            else:
-                print("Available rooms-1", i.room_type, i.no_of_rooms-room1)
-            j += 1
-
+            rem_rooms.update({i.id:i.no_of_rooms - dict[i.id]})
+        print(rem_rooms)
         return redirect('check_availability')
 
+# end route : booking
 def Booking_Page(request):
     if request.method=="GET":
         return render(request, "booking_form.html")
@@ -77,7 +80,7 @@ def Booking_Page(request):
         new_booking.check_in =  check_in
         new_booking.check_out = check_out
         new_booking.room_type = type_of_room
-        new_booking.total_price = 0
+        new_booking.total_price = 0 # calculation is remaining 
         new_booking.save()
         return redirect('booking')
 
