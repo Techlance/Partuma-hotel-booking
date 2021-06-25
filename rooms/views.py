@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from .models import Booked, Rooms
+from datetime import *
 # Create your views here.
 
 
@@ -13,6 +14,40 @@ def check_availability(request):
         checkin = request.POST.get('check_in')
         checkout = request.POST.get('check_out')
         print(checkin, checkout)
+        
+        request_checkin = date(int(checkin[:4]), int(checkin[5:7]), int(checkin[8:]))
+        request_checkout = date(int(checkout[:4]), int(checkout[5:7]), int(checkout[8:]))
+        all_booked = Booked.objects.all()
+        room1 = 0
+        room2 = 0
+        for i in all_booked:
+            full_date = i.check_in
+            full_date_1 = i.check_out
+            # temp1 = str(temp.year)
+            # print(temp1)
+            # print(type(temp1))
+            fetched_checkin = date(int(full_date.year), int(str(full_date.month)), int(str(full_date.day)))
+            fetched_checkout = date(int(full_date_1.year), int(str(full_date_1.month)), int(str(full_date_1.day)))
+            print(request_checkin, fetched_checkin, request_checkout, fetched_checkout)
+            if (request_checkin < fetched_checkin and request_checkout <= fetched_checkin) or (request_checkin >= fetched_checkout and request_checkout > fetched_checkout):
+                pass
+            else:
+                print(i.room_type_id)
+                if i.room_type_id==1:
+                    room1 += 1
+                else:
+                    room2 += 1
+        print(room1)
+        print(room2)
+        all_rooms = Rooms.objects.all()
+        j = 0
+        for i in all_rooms:
+            if j==0:
+                print("Available rooms-2", i.room_type, i.no_of_rooms-room2)
+            else:
+                print("Available rooms-1", i.room_type, i.no_of_rooms-room1)
+            j += 1
+
         return redirect('check_availability')
 
 def Booking_Page(request):
