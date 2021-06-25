@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home page </title>
+</head>
+<body>
+<h1>check Availability</a>
+<form action="check_availability" method="POST">
+{% csrf_token %}
+<input type="date" name="check_in" required>
+<input type="date" name="check_out" required>
+<input type="Submit" value="submit">
+</form>
+</body>
+</html>

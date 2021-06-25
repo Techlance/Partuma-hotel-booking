@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home page </title>
+</head>
+<body>
+<h1>check Availability</a>
+<form action="booking" method="POST">
+{% csrf_token %}
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="phone_number" placeholder="Phone Number" required>
+<input type="text" name="address" placeholder="Address" required>
+<input type="text" name="government_id"  placeholder="Government Id" required>
+<input type="email" name="email" placeholder="email" required>
+<input type="Number" name="no_of_rooms" placeholder="No of rooms" required>
+<input type="Number" name="no_of_adults" placeholder="No of Adults" required>
+<input type="Number" name="no_of_children" placeholder="No of Children" required>
+<h5>Check-in</h5>
+<input type="date" name="check_in" required>
+<h5>Check-out</h5>
+<input type="date" name="check_out" required>
+<input type="Submit" value="submit">
+</form>
+</body>
+</html>
