@@ -21,7 +21,9 @@ class Rooms(models.Model):
     dinner = models.BooleanField(default=False)
     swimming_pool = models.BooleanField(default=False)
     air_conditioning = models.BooleanField(default=False)
-    room_photo = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
+    room_photo_1 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
+    room_photo_2 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
+    room_photo_3 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
 
     def __str__(self):
         return self.room_type
@@ -43,6 +45,13 @@ class Booked(models.Model):
     def __str__(self):
         return self.name
 
+class Contact(models.Model):
+    name = models.TextField(max_length=100)
+    e_mail = models.TextField()
+    subject = models.TextField()
+    message = models.TextField()
+    def __str__(self):
+        return self.name
 
 
 
