@@ -11,9 +11,17 @@ def home_page(request):
         return render(request, "index.html")
     else:
         # Get Data from user
-        checkin = request.POST.get('check_in')
-        checkout = request.POST.get('check_out')
-        print(checkin, checkout)
+        input_date = request.POST.get('check_in')
+        if len(input_date)==0:
+            messages.warning(request, 'Please enter a date')
+            return redirect('')
+        print("date", date)
+        checkin = input_date[:10]
+        print(len(checkin))
+        checkout = input_date[13:]
+        print(len(checkout))
+        print(checkin)
+        print(checkout)
         
         # parse date data to compare with dates fetched from database
         # request_checkin = check-in Date obtained from user using POST request
