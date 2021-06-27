@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import Booked, Rooms, Contact
@@ -71,40 +72,52 @@ def all_rooms(request):
 # end-route : rooms/<int:id>
 def single_room(request, id):
     rooms= Rooms.objects.get(id=id)
+    request.session['room_type'] = rooms.room_type
+    request.session['room_type_id'] = id
     return render(request, "room-single.html", {'rooms':rooms})
 
 
 # end route : booking
 def Booking_Page(request):
     if request.method=="GET":
-        return render(request, "booking.html")
+        rooms = Rooms.objects.all()
+        return render(request, "booking.html", {'rooms':rooms})
     else:
         name = request.POST.get('name')
         phone_number = request.POST.get('phone_number')
-        address = request.POST.get('address')
-        government_id = request.POST.get('government_id')
         email = request.POST.get('email')
+        input_date = request.POST.get('check_in')
+        type_of_room = request.POST.get('room_type') 
         no_of_rooms = request.POST.get('no_of_rooms')
-        no_of_adults = request.POST.get('no_of_adults')
-        no_of_childern = request.POST.get('no_of_children')
-        check_in = request.POST.get('check_in')
-        check_out = request.POST.get('check_out')
-        type_of_room = Rooms.objects.get(id=1)
-        new_booking = Booked()
-        new_booking.name = name
-        new_booking.phone_number = phone_number
-        new_booking.address = address
-        new_booking.government_id = government_id
-        new_booking.e_mail = email
-        new_booking.no_of_rooms = no_of_rooms
-        new_booking.no_of_adults = no_of_adults
-        new_booking.no_of_children = no_of_childern
-        new_booking.check_in =  check_in
-        new_booking.check_out = check_out
-        new_booking.room_type = type_of_room
-        new_booking.total_price = 0 # calculation is remaining 
-        new_booking.save()
         return redirect('booking')
+
+def Booking_Single_Page(request):
+    if request.method=="GET":
+        rooms = Rooms.objects.all()
+        room_type = request.session['room_type']
+        room_type_id = request.session['room_type_id']
+        request.session.flush()
+        return render(request, "booking.html", {'rooms':rooms, 'room_type':room_type, 'room_type_id': room_type_id})
+
+
+
+def send_user_data(request):
+    type_of_room = request.POST.get('room_type')
+    no_of_rooms = request.POST.get('no_of_rooms')
+    no_of_rooms = int(no_of_rooms)
+    type_of_room = int(type_of_room)
+    room_data = Rooms.objects.get(id=type_of_room)
+    total_person = (room_data.max_persons)*no_of_rooms
+    total_price = (room_data.room_price)*no_of_rooms
+    data = {
+        'max_person':total_person,
+        'price':total_price
+    }
+    return JsonResponse(data)
+
+
+
+
 
 def contact(request):
     if request.method=="GET":

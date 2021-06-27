@@ -10,5 +10,7 @@ urlpatterns = [
     path('rooms', views.all_rooms, name="all_rooms"),
     path('contact', views.contact, name="contact"),
     path('rooms/<int:id>', views.single_room, name="single_room"),
-    path('about', views.about, name="about")
+    path('about', views.about, name="about"),
+    path('ajax/send_data', views.send_user_data, name="send_data"),
+    path('single_booking', views.Booking_Single_Page, name="single_booking")
 ] 

@@ -3,12 +3,9 @@
 
 {% load static %}
 
-
-<!-- Import here -->
 {% include 'header.html' %}
 
 <!-- //w3l-header -->
-
 {% if messages %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {% for message in messages %}
@@ -59,7 +56,6 @@
                                  <div class="banner-info-bg">
                                      <h5>Most hotels train their people with the booklets. We take ours to the ballet.
                                      </h5>
-                                     
                                  </div>
                              </div>
                          </div>
@@ -349,8 +345,6 @@
 
 <!-- Template JavaScript -->
 
-
-
 <link rel="stylesheet" href="{% static '/css/hotel-datepicker.css' %}">
 
 <script src="https://unpkg.com/fecha@4.0.0/lib/fecha.umd.js"></script>
@@ -403,8 +397,6 @@
     tomorrowDate.setDate(tomorrowDate.getDate()+1);
     tomorrowDate=tomorrowDate.toISOString().slice(0, 10);
     document.getElementById("from").value = todayDate+" - "+tomorrowDate;
-
-
 </script>
 
 
