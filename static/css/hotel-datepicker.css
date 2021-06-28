@@ -165,7 +165,7 @@
 }
 
 .datepicker__month-day--selected {
-  background-color: rgba(116, 107, 253, 0.2);
+  background-color: #f3602d;
   color: #fff;
 }
 
@@ -174,18 +174,18 @@
 }
 
 .datepicker__month-day--hovering {
-  background-color: rgba(116, 107, 253, 0.3);
+  background-color: #f35e2d8f;
   color: #fff;
 }
 
 .datepicker__month-day--today {
-  background-color: #484c55;
+  background-color: #f35e2d8f;
   color: #fff;
 }
 
 .datepicker__month-day--first-day-selected,
 .datepicker__month-day--last-day-selected {
-  background-color: #746bfd;
+  background-color: #f3602d;
   color: #fff;
 }
 
@@ -208,7 +208,7 @@
 }
 
 .datepicker__month-button:hover {
-  background-color: #746bfd;
+  background-color: #f3602d;
   color: #ffffff;
 }
 
@@ -253,13 +253,14 @@
   transition-property: color, background-color, border-color;
   -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: #746bfd;
+  color: #fff;
+  background-color: #f3602d;
+  border-color: #f25621;
   border-radius: 4px;
   border: none;
   -webkit-box-shadow: none;
           box-shadow: none;
   font-size: 10px;
-  color: #ffffff;
   margin-top: 20px;
   padding: 7px 13px;
   text-decoration: none;
@@ -268,8 +269,9 @@
 }
 
 .datepicker__close-button:hover {
-  background-color: #d6dae5;
-  color: #9da6b8;
+  color: #fff;
+  background-color: #f3602d;
+  border-color: #f25621;
 }
 
 .datepicker__tooltip {

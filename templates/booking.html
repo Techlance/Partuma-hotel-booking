@@ -23,11 +23,11 @@ Author URL: http://w3layouts.com
                             <div class="d-grid grid-col-2">
                                 <div class="hny-frm_grid">
                                     <h5>Name</h5>
-                                    <input class="name" name="Text" type="text" placeholder="Your Name" required="">
+                                    <input class="name" name="name" type="text" placeholder="Your Name" required>
                                 </div>
                                 <div class="hny-frm_grid">
                                     <h5>Phone Number</h5>
-                                    <input class="phone" name="Text" type="phone" placeholder="Phone Number" required="">
+                                    <input class="phone" name="phone_number" type="phone" placeholder="Phone Number" required>
                                 </div>
                                 
                                 <!-- <div class="hny-frm_grid">
@@ -45,23 +45,22 @@ Author URL: http://w3layouts.com
                                 <input class="" name="email" type="email" placeholder="Email ID" required>
                             </div>
                           </div>  
-                            <div class="d-grid hny-frm_grid mt-3">
+                            <div class="d-grid hny-frm_grid mt-3" >
                               <h5>Check-in/check-out Date</h5>
                               <input 
                                   type="text" 
-                                  id="from" 
+                                  id="from"
                                   name="check_in" 
                                   placeholder="Check-in/check-out Date" 
-                                  pattern="[0-9]{4}[-]{1}[0-9]{2}[-]{1}[0-9]{2}" 
+                                  pattern="[0-9]{4}[-]{1}[0-9]{2}[-]{1}[0-9]{2} [-] [0-9]{4}[-]{1}[0-9]{2}[-]{1}[0-9]{2}" 
                                   autocomplete="off"
-                                  readonly 
                                   required 
                               />
                             </div>
                             <div class="d-grid grid-col-2 mt-3">
                               <div class="hny-frm_grid">
                                   <h5>Room Type</h5>
-                                  <select id="room_type" name="room_type" required="">
+                                  <select id="room_type" name="room_type" required>
                                   {% if room_type %}
                                     <option value="{{room_type_id}}">{{room_type}}</option>
                                     {% for i in rooms %}
@@ -79,8 +78,7 @@ Author URL: http://w3layouts.com
                               </div>
                               <div class="hny-frm_grid">
                                   <h5>Number of Rooms</h5>
-                                  <select id="no_of_rooms" name="no_of_rooms" required="">
-
+                                  <select id="no_of_rooms" name="no_of_rooms" required>
                                       <option value="1">1</option>
                                       <option value="2">2</option>
                                       <option value="3">3</option>
@@ -91,14 +89,14 @@ Author URL: http://w3layouts.com
                             <div class="d-grid grid-col-2 mt-3">
                                 <div class="hny-frm_grid">
                                     <h5>Adults</h5>
-                                    <select id="no_of_adults" name="no_of_adults" required="">
+                                    <select id="no_of_adults" name="no_of_adults" required>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                     </select>
                                 </div>
                                 <div class="hny-frm_grid">
                                     <h5>Children</h5>
-                                    <select id="no_of_Children" name="no_of_Children" required="">
+                                    <select id="no_of_children" name="no_of_children" required>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -106,8 +104,29 @@ Author URL: http://w3layouts.com
                                 </div>
                             </div>
                            
-                            <button class="btn btn-style btn-secondary book mt-3">Book Now</button>
-                            <p style="color:#000; font-size:30px;">₹<p id="price" style="color:#f57b51; font-size:20px;"></p></p>
+                         
+                            <div class="d-grid grid-col-2 mt-3">
+                              <div class="hny-frm_grid">
+                                  <h5>Price</h5>
+                                  <p style="color:#000; font-size:30px; display:inline">₹
+                                    <p id="price" style="color:#f57b51; font-size:24px;display:inline;"></p>
+                                </p>
+                               
+                              </div>
+
+                              <div class="hny-frm_grid">
+                                  <h5>Number of Available Rooms</h5>
+                                    <p 
+                                      id="available" 
+                                      style="color:#f57b51; font-size:20px; display:inline;"
+                                    >
+                                      NaN
+                                    </p>
+                                    <p></p>
+                              </div>
+                            </div>
+
+                            <button class="btn btn-style btn-secondary book mt-3 mb-3">Book Now</button>
 
                         </form>
                     </div>
@@ -259,87 +278,213 @@ $(function () {
 <script src="https://unpkg.com/fecha@4.0.0/lib/fecha.umd.js"></script>
 
 <script src="{% static 'js/hotel-datepicker.min.js' %}"></script>
-
-
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <script>
+
 var input = document.getElementById('from');
 var datepicker = new HotelDatepicker(input);
-
 var todayDate = new Date().toISOString().slice(0, 10);
 var tomorrowDate = new Date();
 tomorrowDate.setDate(tomorrowDate.getDate()+1);
 tomorrowDate=tomorrowDate.toISOString().slice(0, 10);
-document.getElementById("from").value = todayDate+" - "+tomorrowDate;
+
+input.value = todayDate+" - "+tomorrowDate;
+
+datepicker.onSelectRange = function () {
+  var event = new Event('change');
+  input.dispatchEvent(event);
+}
+
 </script>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
 <script>
-    $(document).ready(function(){
-      var room_type = $("#room_type").val();
-      var no_of_rooms = $("#no_of_rooms").val();
-      console.log(room_type);
-      $.ajax({
-        url: 'ajax/send_data',
-        type: "POST",
-         
-        data: {
-          'room_type': room_type,
-          'no_of_rooms':no_of_rooms,
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        dataType: 'json',
-        success: function (data) {
-            $('#price').html(data.price);
-            console.log(data);
+  $(document).ready(function(){
+    var room_type = $("#room_type").val();
+    var no_of_rooms = $("#no_of_rooms").val();
+    var check_in = $("#from").val();
+    
+    $.ajax({
+      url: 'ajax/send_data',
+      type: "POST",
+       
+      data: {
+        'room_type': room_type,
+        'no_of_rooms':no_of_rooms,
+        'check_in':check_in,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function (data) {
+          $('#price').html(data.price);
+          
 
-            var options = "";
-            for(i=0;i<parseInt(data.max_person);i++)
-            {
-              options += `<option value="${i+1}">${i+1}</option>`;
-              
-            }
-            $('#no_of_adults').html(options);
-
+          var options = "";
+          for(i=0;i<parseInt(data.max_person);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
+            
           }
-      });
-       $('#room_type, #no_of_rooms').change(function () {
-      var room_type = $("#room_type").val();
-      var no_of_rooms = $("#no_of_rooms").val();
-      console.log(room_type);
-      $.ajax({
-        url: 'ajax/send_data',
-        type: "POST",
-         
-        data: {
-          'room_type': room_type,
-          'no_of_rooms':no_of_rooms,
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        dataType: 'json',
-        success: function (data) {
-            $('#price').html(data.price);
+          $('#no_of_adults').html(options);
 
-            var options = "";
-            for(i=0;i<parseInt(data.max_person);i++)
-            {
-              options += `<option value="${i+1}">${i+1}</option>`;
-              
-            }
-            $('#no_of_adults').html(options);
 
+          var options2 = "";
+
+          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
           }
-      });
+          $('#no_of_children').html(options);
 
+
+          var options1 = "";
+          for(i=0;i<parseInt(data.no_of_rooms_available);i++)
+          {
+            options1 += `<option value="${i+1}">${i+1}</option>`;
+          }
+          $("#no_of_rooms").html(options1);
+          $("#available").html(data.no_of_rooms_available);
+
+        }
     });
+
+    
+     $("#from, #room_type").change(function () {
+    var room_type = $("#room_type").val();
+    var no_of_rooms = $("#no_of_rooms").val();
+    var check_in = $("#from").val(); // "2021-07-05 - 2021-07-06"
+    
+    $.ajax({
+      url: 'ajax/send_data',
+      type: "POST",
+       
+      data: {
+        'room_type': room_type,
+        'no_of_rooms':no_of_rooms,
+        'check_in':check_in,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function (data) {
+
+          var options = "";
+          for(i=0;i<parseInt(data.max_person);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
+          }
+          $('#no_of_adults').html(options);
+
+          var options2 = "";
+
+          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
+          }
+          $('#no_of_children').html(options);
+
+          var options1 = "";
+          var mod=parseInt(data.no_of_rooms_available);
+          no_of_rooms=parseInt(no_of_rooms);
+          if(no_of_rooms<=mod)
+          {
+          $('#price').html(data.price);
+          }
+          console.log(mod);
+          console.log(no_of_rooms);
+          if(no_of_rooms>mod)
+          {
+            no_of_rooms=1;
+            $.ajax(
+              {
+                url: 'ajax/send_data',
+                type: "POST",
+                
+                data: {
+                  'room_type': room_type,
+                  'no_of_rooms':no_of_rooms,
+                  'check_in':check_in,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#price').html(data.price);
+                }
+              }
+            );
+          }
+          for(i=1;i<=mod;i++)
+          {
+            if(i==no_of_rooms)
+            {
+              options1+=`<option value="${i}" selected >${i}</option>`;
+            }
+            else
+            {
+              options1+=`<option value="${i}">${i}</option>`;
+            }
+            
+          }
+          
+          $("#no_of_rooms").html(options1);
+          $("#available").html(data.no_of_rooms_available);
+        }
+    });
+
+  });
 });
 </script>
-  
+
+<script>
+
+  $(document).ready(function(){
+    
+     $("#no_of_rooms").change(function () {
+       console.log("hi");
+    var room_type = $("#room_type").val();
+    var no_of_rooms = $("#no_of_rooms").val();
+    var check_in = $("#from").val(); // "2021-07-05 - 2021-07-06"
+    
+    $.ajax({
+      url: 'ajax/send_data',
+      type: "POST",
+       
+      data: {
+        'room_type': room_type,
+        'no_of_rooms':no_of_rooms,
+        'check_in':check_in,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function (data) {
+          $('#price').html(data.price);
+
+          var options = "";
+          for(i=0;i<parseInt(data.max_person);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
+          }
+          $('#no_of_adults').html(options);
+
+          var options2 = "";
+
+          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          {
+            options += `<option value="${i+1}">${i+1}</option>`;
+          }
+          $('#no_of_children').html(options);
+
+         
+          $("#available").html(data.no_of_rooms_available);
+        }
+    });
+
+  });
+});
+</script>
+
 </body>
-
-
-
-
 
 <!-- Mirrored from demo.w3layouts.com/demos_new/template_demo/28-03-2020/hotels-liberty-demo_Free/1275019035/web/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Jun 2021 08:11:22 GMT -->
 </html>
