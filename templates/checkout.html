@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% load static %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/verification.css' %}">
+<link rel="stylesheet" href="{% static 'css/style-liberty.css' %}">
+<title>Partuma</title>
+</head>
+<body>
+   
+   <div 
+      class="row info place-items-center align-items-center justify-content-center m-auto"
+   >
+   <div class="verfication-card py-5 px-3 m-3 col-md-6 w3l-booking-top">
+      <h5 class="mb-3 m-0" style="text-align:center">
+         Provisional Booking Completed
+      </h5>
+      <div class="d-grid grid-col-2">
+         <div class="hny-frm_grid">
+            <h5>Name</h5>
+            <input class="form-control" placeholder="{{ user_input.name }}" disabled>
+         </div>
+         <div class="hny-frm_grid">
+            <h5>Phone Number</h5>
+            <input class="form-control" placeholder="{{ user_input.phone_number }}" disabled>
+         </div>
+      </div>
+
+      <div class="d-grid grid-col-2 mt-2">
+         <div class="hny-frm_grid">
+            <h5>E-mail</h5>
+            <input class="form-control" placeholder="{{ user_input.email }}" disabled>
+         </div>
+         <div class="hny-frm_grid">
+            <h5>Room Type</h5>
+            <input class="form-control" placeholder="{{ room_type }}" disabled>
+         </div>
+      </div>
+
+      <div class="d-grid grid-col-2 mt-2">
+         <div class="hny-frm_grid">
+            <h5>Check-in Date</h5>
+            <input class="form-control" placeholder="{{ user_input.check_in }}" disabled>
+         </div>
+         <div class="hny-frm_grid">
+            <h5>Check-out Date</h5>
+            <input class="form-control" placeholder="{{ user_input.check_out }}" disabled>
+         </div>
+      </div>
+      
+      <div class="d-grid grid-col-2 mt-2">
+         <div class="hny-frm_grid">
+            <h5>No of Adults</h5>
+            <input class="form-control" placeholder="{{ user_input.no_of_adults }}" disabled>
+         </div>
+         <div class="hny-frm_grid">
+            <h5>No of Children</h5>
+            <input class="form-control" placeholder="{{ user_input.no_of_children }}" disabled>
+         </div>
+      </div>
+
+      <div class="d-grid grid-col-2 mt-2">
+         <div class="hny-frm_grid">
+            <h5>No of Rooms</h5>
+            <input class="form-control" placeholder="{{ user_input.no_of_rooms }}" disabled>
+         </div>
+         <div class="hny-frm_grid">
+            <h5>No of Days</h5>
+            <input class="form-control" placeholder="{{ user_input.no_of_days_requested }}" disabled>
+         </div>
+      </div>
+
+      <div class="d-grid mt-2">
+         <div class="hny-frm_grid">
+            <h5>Price</h5>
+               <p style="color:#000; font-size:30px; display:inline">
+                  R
+                  <p 
+                     id="price" 
+                     style="color:#f57b51; font-size:24px;display:inline;">
+                     {{ total_price }}
+                  </p>
+               </p>
+         </div>
+      </div>
+
+      <a 
+         type="submit"
+         href="download_pdf" 
+         value="Download Recipt" 
+         style="background-color:#f57b51; color:#fff" 
+         class="btn btn-style btn-secondary book mt-3 mb-3" 
+      >
+      Download Provisional Invoice
+   </a>
+   </div>
+</div>
+</body>
+</html>

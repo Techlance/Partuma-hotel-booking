@@ -24,6 +24,8 @@ class Rooms(models.Model):
     room_photo_1 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
     room_photo_2 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
     room_photo_3 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
+    room_photo_4 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
+    room_photo_5 = models.ImageField(upload_to="rooms_image/", default="media/about3.jpg")
 
     def __str__(self):
         return self.room_type

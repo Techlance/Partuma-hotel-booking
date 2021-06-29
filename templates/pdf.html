@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+{% load static %}
+
+
+
+</head>
+<!-- <style>
+   @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
+* {
+   scroll-behavior: smooth;
+   font-family: 'Poppins', sans-serif;
+}
+.otp-card {
+   max-width: 420px !important;
+   padding: 10px;
+   border-radius: 20px;
+   background-color: rgb(255, 255, 255);
+   border: none;
+   height: 400px;
+   position: relative;
+}
+.details-card {
+   max-width: 420px !important;
+   padding: 13px;
+   border-radius: 20px;
+   background-color: rgb(255, 255, 255);
+   border: none;
+   height: 540px;
+   position: relative;
+}
+.verfication-card {
+   max-width: 520px !important;
+   padding: 13px;
+   border-radius: 20px;
+   background-color: rgb(255, 255, 255);
+   border: none;
+   height: 600px;
+   position: relative;
+}
+.info {
+   height: 100vh;
+   width: 100%;
+   flex-wrap: wrap;
+}
+.container {
+   height: 100vh
+}
+
+/* body {
+   width: 100vw;
+   height: 100vh;
+   background: linear-gradient(to top right, #ffcc40 -50%, #fa3200b4 100%)
+   
+} */
+
+
+.mobile-text {
+   color: #989696b8;
+   font-size: 15px
+}
+
+.form-control {
+   margin-right: 12px
+}
+
+.form-control:focus {
+   color: #495057;
+   background-color: #fff;
+   border-color: #677eff;
+   outline: 0;
+   box-shadow: none
+}
+
+.cursor {
+   cursor: pointer
+}
+
+@media screen and (max-width: 600px) {
+   .otp-card {
+       width: 300px !important;
+       height: 400px;
+   }
+   .details-card {
+       width: 300px !important;
+       height: 1000px !important;
+   }
+   .verfication-card {
+       width: 300px !important;
+       height: 1040px !important;
+   }
+   .container {
+       height: unset;
+   }
+   .info {
+       height: fit-content;
+   }
+   body {
+       height: fit-content;
+   }
+}
+
+
+
+</style> -->
+
+<body style="font-size:50px;">
+
+<!--     
+    <div style="border:1px solid #000">
+        <table border="1" cellpadding="50" cellspacing="0">
+            <tr><th width=20 align="left">xxxxxxxx:</th><td width="100">xxxxxxxx</td></tr>
+            <tr><th width=20 align="left">xxxxxxxx:</th><td width="100">xxxxxxxxx</td></tr>
+            <tr><th width=20 align="left">xxxxxxxx:</th><td width="100">xxxxxxxxx</td></tr>
+            <tr><th width=20 align="left">xxxxxxxx:</th><td width="100">xxxxxxxxx</td></tr>
+        </table>
+    </div>
+    <div>
+        <table border="1" cellpadding="50" cellspacing="0">
+            <tr>
+                <td width="200">xxxxxx: 1</td>
+                <td width="200">xxxxxx: 0</td>
+                <td width="200">xxxxxx: 1</td>
+            </tr>
+        </table>
+    </div>
+    <table style="border: 1px solid black;" border="1" cellpadding="5" cellspacing="0">
+   
+            <tr style="background-color: #6AB9F7;">
+                <td width="200">Sr. No</td>
+                <td width="200">Name</td>
+                <td width="200">xxxxxx</td>
+                <td width="200">xxxxxx</td>
+                <td width="200">xxxxxx</td>
+            </tr>
+            <tr>
+                <td width="200">1</td>
+                <td width="20">xxxxxx</td>
+                <td width="20">xxxxxx</td>
+                <td width="20">xxxxxx</td>
+                <td width="20">xxxxxx</td>
+            </tr>
+    </table> -->
+
+    <!-- <table width="239" style="border:1px solid #000">
+        <tr>
+        <td width="110">&nbsp;</td>
+        <td width="127">&nbsp;</td>
+        </tr>
+        <tr>
+        <td width= "110">&nbsp;</td>
+        <td width="127">&nbsp;</td>
+        </tr>
+        <tr>
+        
+    
+        </tbody>
+        </table> -->
+<hr>
+<h1>                     Partuma Provisional Invoice</h1>
+<hr>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<h1>                                 Booking Info</h1>
+
+<br>
+<br>
+<br>
+<table border="0" align="center" width="50%">
+        <thead>
+            <tr>
+                <th width="30%"></th>
+                <th width="70%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>{{ name }}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Phone</th>
+                <th>{{phone_number}}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Email</th>
+                <th>{{ email }}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Check-in Date</th>
+                <th>{{check_in}}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Check-out Date</th>
+                <th>{{check_out}}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Type of Room</th>
+                <th>{{ room_type }}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Number of Rooms</th>
+                <th>{{ no_of_rooms }}</th>
+            </tr>
+            <br>
+            <tr>
+                <th>Number of Adults</th>
+                <th>{{ no_of_adults }} </th>
+            </tr>
+            <br>
+            <tr>
+                <th>No of Children</th>
+                <th>{{no_of_children}}</th>
+            </tr>
+            <br>
+            
+            <tr>
+                <th>Price</th>
+                <th>{{total_price}}</th>
+            </tr> 
+            <br> 
+            <tr>
+                <th>No of Nights<th>
+                <th>{{no_of_days_requested}} &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp </th>
+            </tr>
+           
+        </tbody>
+        
+    </table>
+    
+<h3> Thank you for booking with us. </h3>
+    
+<hr>
+</body>
+</html>

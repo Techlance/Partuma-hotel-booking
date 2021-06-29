@@ -1,7 +1,4 @@
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
--->
+
 <!doctype html>
 <html lang="en">
 
@@ -17,8 +14,8 @@ Author URL: http://w3layouts.com
                 <div class="form-right-inf">
                     <div class="booking-form-content">
                         <h6>Book Now</h6>
-                        <p>Booking Type</p>
-                        <form action="booking" class="book-depature-6 signin-form" method="post">
+                        
+                        <form action="booking" class="book-depature-6 signin-form" method="post" onsubmit="process(event)">
                         {% csrf_token %}
                             <div class="d-grid grid-col-2">
                                 <div class="hny-frm_grid">
@@ -27,7 +24,7 @@ Author URL: http://w3layouts.com
                                 </div>
                                 <div class="hny-frm_grid">
                                     <h5>Phone Number</h5>
-                                    <input class="phone" name="phone_number" type="phone" placeholder="Phone Number" required>
+                                    <input class="phone" id="phone_no" name="phone_number" type="tel" placeholder="Phone Number" required>
                                 </div>
                                 
                                 <!-- <div class="hny-frm_grid">
@@ -108,8 +105,9 @@ Author URL: http://w3layouts.com
                             <div class="d-grid grid-col-2 mt-3">
                               <div class="hny-frm_grid">
                                   <h5>Price</h5>
-                                  <p style="color:#000; font-size:30px; display:inline">₹
+                                  <p style="color:#000; font-size:30px; display:inline">R
                                     <p id="price" style="color:#f57b51; font-size:24px;display:inline;"></p>
+                                    <!-- <p style="color:#000; font-size:30px; display:inline">R</p> -->
                                 </p>
                                
                               </div>
@@ -126,9 +124,10 @@ Author URL: http://w3layouts.com
                               </div>
                             </div>
 
-                            <button class="btn btn-style btn-secondary book mt-3 mb-3">Book Now</button>
-
+                            <input type="submit" value="Book Now" style="background-color:#f57b51; color:#fff" class="btn btn-style btn-secondary book mt-3 mb-3">
+                           
                         </form>
+                        
                     </div>
                 </div>
 
@@ -145,11 +144,78 @@ Author URL: http://w3layouts.com
 <!-- //form-16-section -->
 {% include 'footer.html' %} 
 <!-- Template JavaScript -->
-<script src="assets/js/jquery-3.3.1.min.js"></script>
+<script src="static/js/jquery-3.3.1.min.js"></script>
 
-<script src="assets/js/owl.carousel.js"></script>
-<!-- script for banner slider-->
+<!-- <script src="assets/js/owl.carousel.js"></script>
+ -->
+
+<!-- phone-number -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
 <script>
+//   function getIp(callback) {
+//  fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/adminDivisions', { headers: { 'Accept': 'application/json' }})
+//    .then((resp) => resp.json())
+//    .catch(() => {
+//      return {
+//        country: 'us',
+//      };
+//    })
+//    .then((resp) => callback(resp.country));
+// }
+
+  const phoneInputField = document.querySelector("#phone_no");
+  // const phoneInput = window.intlTelInput(phoneInputField, {
+  // initialCountry: "auto",
+  // geoIpLookup: getIp,
+  // utilsScript:
+  //   "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+  // });
+
+  const phoneInput = window.intlTelInput(phoneInputField, {
+    utilsScript:
+      "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+  });
+
+function process(event) {
+
+ const phoneNumber = phoneInput.getNumber();
+ console.log(phoneNumber);
+ var inputF = document.getElementById("phone_no");
+ inputF.value = phoneNumber;
+//  info.innerHTML = `${phoneNumber}`;
+}
+
+
+</script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"
+integrity="sha512-DNeDhsl+FWnx5B1EQzsayHMyP6Xl/Mg+vcnFPXGNjUZrW28hQaa1+A4qL9M+AiOMmkAhKAWYHh1a+t6qxthzUw=="
+crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css"
+integrity="sha512-yye/u0ehQsrVrfSd6biT17t39Rg9kNc+vENcCXZuMz2a+LWFGvXUnYuWUW6pbfYj1jcBb/C39UZw2ciQvwDDvg=="
+crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+integrity="sha512-BNZ1x39RMH+UYylOW419beaGO0wqdSkO7pi1rYDYco9OL3uvXaC/GTqA5O4CVK2j4K9ZkoDNSSHVkEQKkgwdiw=="
+crossorigin="anonymous"></script> -->
+
+<!-- <script>
+  var input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        separateDialCode: true,
+        customPlaceholder: function (
+            selectedCountryPlaceholder,
+            selectedCountryData
+        ) {
+            return "e.g. " + selectedCountryPlaceholder;
+        },
+    });
+</script> -->
+
+<!-- end-phone-number -->
+
+<!-- script for banner slider-->
+<!-- <script>
   $(document).ready(function () {
     $('.owl-one').owlCarousel({
       loop: true,
@@ -180,11 +246,11 @@ Author URL: http://w3layouts.com
       }
     })
   })
-</script>
+</script> -->
 <!-- //script -->
 
 <!-- script for owlcarousel -->
-<script>
+<!-- <script>
   $(document).ready(function () {
     $('.owl-testimonial').owlCarousel({
       loop: true,
@@ -215,9 +281,9 @@ Author URL: http://w3layouts.com
       }
     })
   })
-</script>
+</script> -->
 <!-- //script for owlcarousel -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- <script src="assets/js/jquery.magnific-popup.min.js"></script>
 <script>
   $(document).ready(function () {
     $('.popup-with-zoom-anim').magnificPopup({
@@ -252,7 +318,7 @@ Author URL: http://w3layouts.com
       mainClass: 'my-mfp-slide-bottom'
     });
   });
-</script>
+</script> -->
 
 
 <!-- disable body scroll which navbar is in active -->
@@ -265,13 +331,11 @@ $(function () {
 </script>
 <!-- disable body scroll which navbar is in active -->
 
-<script src="assets/js/bootstrap.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
 
 
 
-<div id = "v-w3layouts"></div>
-<script>(function(v,d,o,ai){ai=d.createElement('script');ai.defer=true;ai.async=true;ai.src=v.location.protocol+o;d.head.appendChild(ai);})(window, document, '../../../../../../../a.vdo.ai/core/v-w3layouts/vdo.ai.js');
-</script>
+
 
 <link rel="stylesheet" href="{% static '/css/hotel-datepicker.css' %}">
 
@@ -332,11 +396,11 @@ datepicker.onSelectRange = function () {
 
           var options2 = "";
 
-          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          for(i=0;i<parseInt(parseInt(data.max_person)/2)+1;i++)
           {
-            options += `<option value="${i+1}">${i+1}</option>`;
+            options2 += `<option value="${i+1}">${i+1}</option>`;
           }
-          $('#no_of_children').html(options);
+          $('#no_of_children').html(options2);
 
 
           var options1 = "";
@@ -378,11 +442,11 @@ datepicker.onSelectRange = function () {
 
           var options2 = "";
 
-          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          for(i=0;i<parseInt(parseInt(data.max_person)/2)+1;i++)
           {
-            options += `<option value="${i+1}">${i+1}</option>`;
+            options2 += `<option value="${i+1}">${i+1}</option>`;
           }
-          $('#no_of_children').html(options);
+          $('#no_of_children').html(options2);
 
           var options1 = "";
           var mod=parseInt(data.no_of_rooms_available);
@@ -469,11 +533,11 @@ datepicker.onSelectRange = function () {
 
           var options2 = "";
 
-          for(i=0;i<parseInt(parseInt(data.max_person)/2);i++)
+          for(i=0;i<parseInt(parseInt(data.max_person)/2)+1;i++)
           {
-            options += `<option value="${i+1}">${i+1}</option>`;
+            options2 += `<option value="${i+1}">${i+1}</option>`;
           }
-          $('#no_of_children').html(options);
+          $('#no_of_children').html(options2);
 
          
           $("#available").html(data.no_of_rooms_available);
@@ -486,5 +550,4 @@ datepicker.onSelectRange = function () {
 
 </body>
 
-<!-- Mirrored from demo.w3layouts.com/demos_new/template_demo/28-03-2020/hotels-liberty-demo_Free/1275019035/web/booking.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Jun 2021 08:11:22 GMT -->
 </html>

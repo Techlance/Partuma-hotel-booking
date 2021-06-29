@@ -3,8 +3,77 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import Booked, Rooms, Contact
 from datetime import *
+from datetime import datetime, timedelta
+import time
+import random
+from django.conf import settings
+from django.core.mail import send_mail
+from twilio.rest import Client
+from django.core.mail import EmailMultiAlternatives
+from django.template import Context
+from io import BytesIO
+from django.http import HttpResponse, request
+import os
+from django.template import Template, Context
+from django.http import HttpResponse 
+from django.template.loader import render_to_string
+from django.shortcuts import HttpResponse
+from django.template.loader import get_template, render_to_string
 
+from fpdf import FPDF, HTMLMixin
 # Create your views here.
+
+# send sms to user
+def send_sms(otp, to_):
+
+    # Your Account SID from twilio.com/console
+   
+    account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
+    # Your Auth Token from twilio.com/console
+    auth_token  = "44705a3ce65f65f5c7bffc47e398311e"
+    client = Client(account_sid, auth_token)
+    
+    message = client.messages.create(
+        to=str(to_), 
+        from_="+12512903658",
+        body="Your otp is " + str(otp)  + " only valid for 05 mins ")
+
+
+def partuma_confirmation(name, mob, room_type, no_of_rooms, checkin_date, checkout_date, price):
+    
+
+    # Your Account SID from twilio.com/console
+   
+    account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
+    # Your Auth Token from twilio.com/console
+   
+    auth_token  = "44705a3ce65f65f5c7bffc47e398311e"
+
+    client = Client(account_sid, auth_token)
+    # print(to_)
+    message = client.messages.create(
+        to="+91" + str(7048475675), 
+        from_="+12512903658",
+        body = "Name : " + name + "\nMob : " + mob + "\nRoom Type : " + str(room_type) + "\nNo Of Rooms: " + str(no_of_rooms) + "\nCheckIn Date : " + checkin_date + "\ncheckOut Date : " + checkout_date + "\nPrice : " + str(price) + "\nhas booked a room from your site.")
+
+    
+
+
+def client_confirmation(source, destination, book_date, to_, time):
+    
+
+    # Your Account SID from twilio.com/console
+    account_sid = "AC86e7e3e3be1be5c09d10f863c1ccccdb"
+    # account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
+    # Your Auth Token from twilio.com/console
+    auth_token  = "1d2b1c7b9363dd4b41fc740b2bb3b49a"
+    # auth_token  = "44705a3ce65f65f5c7bffc47e398311e"
+
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        to="+91" + str(to_), 
+        from_="+17864716329",
+        body="Your booking has been confirmed on " + book_date + " from " + source +  " to " + destination + " at " + time +  " with DropTaxiCab. Contact drop taxi team on 9489487288. For Advance payment you can pay using Google Pay / PhonePe / PayTM on 9489487288. Happy Journey!!")
 
 
 # Reusable function to check available dates
@@ -88,52 +157,6 @@ def single_room(request, id):
     return render(request, "room-single.html", {'rooms':rooms})
 
 
-# end route : booking
-def Booking_Page(request):
-    if request.method=="GET":
-        rooms = Rooms.objects.all()
-        return render(request, "booking.html", {'rooms':rooms})
-    else:
-        name = request.POST.get('name')
-        phone_number = request.POST.get('phone_number')
-        email = request.POST.get('email')
-        input_date = request.POST.get('check_in')
-        type_of_room = request.POST.get('room_type') 
-        no_of_rooms = int(request.POST.get('no_of_rooms'))
-        no_of_adults = int(request.POST.get('no_of_adults'))
-        no_of_children = int(request.POST.get('no_of_children'))
-        
-        checkin = input_date[:10]
-        checkout = input_date[13:]
-        
-        # parse date data to compare with dates fetched from database
-        # request_checkin = check-in Date obtained from user using POST request
-        # request_checkout = check-out Date obtained from user using POST request
-        request_checkin = date(int(checkin[:4]), int(checkin[5:7]), int(checkin[8:]))
-        request_checkout = date(int(checkout[:4]), int(checkout[5:7]), int(checkout[8:]))
-        difference_days = request_checkout - request_checkin
-        no_of_days_requested = difference_days.days
-        
-        
-        room_data = Rooms.objects.get(id=type_of_room)
-        total_price = int(room_data.room_price)*int(no_of_rooms)*int(no_of_days_requested)
-        print(total_price)
-        booking = Booked()
-        booking.name = name
-        booking.phone_number = phone_number
-        booking.email = email
-        booking.no_of_rooms = no_of_rooms
-        booking.no_of_adults = no_of_adults
-        booking.no_of_children = no_of_children
-        booking.total_price = total_price
-        booking.check_in = request_checkin
-        booking.check_out = request_checkout
-        booking.room_type = room_data
-        booking.save()
-        
-        return redirect('verification')
-
-
 #end route : single_booking
 def Booking_Single_Page(request):
     if request.method=="GET":
@@ -188,8 +211,187 @@ def contact(request):
         messages.success(request, 'Your message has been sent')
         return redirect('contact')
 
+# end route : booking
+def Booking_Page(request):
+    if request.method=="GET":
+        rooms = Rooms.objects.all()
+        return render(request, "booking.html", {'rooms':rooms})
+    else:
+        name = request.POST.get('name')
+        phone_number = request.POST.get('phone_number')
+        print(phone_number)
+        email = request.POST.get('email')
+        input_date = request.POST.get('check_in')
+        type_of_room = request.POST.get('room_type') 
+        no_of_rooms = int(request.POST.get('no_of_rooms'))
+        no_of_adults = int(request.POST.get('no_of_adults'))
+        no_of_children = int(request.POST.get('no_of_children'))
+        
+        checkin = input_date[:10]
+        checkout = input_date[13:]
+        
+        # parse date data to compare with dates fetched from database
+        # request_checkin = check-in Date obtained from user using POST request
+        # request_checkout = check-out Date obtained from user using POST request
+        request_checkin = date(int(checkin[:4]), int(checkin[5:7]), int(checkin[8:]))
+        request_checkout = date(int(checkout[:4]), int(checkout[5:7]), int(checkout[8:]))
+        difference_days = request_checkout - request_checkin
+        no_of_days_requested = difference_days.days
+
+        context = check_availability(input_date)
+        no_of_rooms_available = context['rem_rooms'][int(type_of_room)]
+        if no_of_rooms_available >= no_of_rooms:
+        
+            # Generate OTP
+            otp = random.randint(1000,9999)
+            print("otp: ", otp)
+
+            # User Data is stored in session till user is verified using OTP
+            request.session['data'] = {'name': name, 'phone_number': phone_number, 'email': email ,'check_in': checkin, 'check_out':checkout, 'type_of_room': type_of_room, 'no_of_rooms': no_of_rooms, 'no_of_adults': no_of_adults,'no_of_children': no_of_children, 'no_of_days_requested':no_of_days_requested}
+            request.session['otp']=otp
+            expire_at = time.time() + 20   
+            request.session['exp'] = expire_at
+            try:
+                print(phone_number)
+                send_sms(otp,phone_number)
+                context = {
+                        'var_phone': phone_number
+                        }
+                    
+                return redirect("verification")
+            except:
+                request.session.flush()
+                messages.warning(request, 'Please enter a valid phone number')
+                response = redirect('/')
+                return response
+
+            
+        else:
+            # if 2-3 three users clicks on book now for same type of room there will be problem so we handled that using above condition
+            messages.info("Sorry.We Ran out of rooms!!")
+            return redirect("booking")
+
+# end route : verification 
+# This function verfies OTP and redirect to checkout page if OTP is validated       
 def verification(request):
-    return render(request, "verification.html")
+    if request.session.get('otp', None):
+        if request.method =='POST':
+            if request.session.get('data', None):
+                if time.time()>request.session['exp']:
+                    context = {
+                        'var_phone': request.session['data']['phone_number']
+                    }
+                    messages.warning(request, 'OTP was expired!')
+                    response = redirect('verification')
+                    return response
+                elif(request.session['otp'] == int(request.POST.get('otp'))):
+                    user_input = request.session['data']
+                    room_data = Rooms.objects.get(id=user_input['type_of_room'])
+                    total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
+                    user_data = Booked(name = user_input['name'],phone_number = user_input['phone_number'], e_mail = user_input['email'], no_of_rooms = user_input['no_of_rooms'],no_of_adults  = user_input['no_of_adults'], no_of_children  = user_input['no_of_children'],total_price=total_price , check_in =user_input['check_in'], check_out=user_input['check_out'], room_type=room_data)
+                    user_data.save()
+                    name  = user_input['name']
+                    phone_number = user_input['phone_number']
+                    email_1 = user_input['email']
+                    check_in = user_input['check_in']
+                    check_out = user_input['check_out']
+                    no_of_rooms = user_input['no_of_rooms']
+                    no_of_adults  = user_input['no_of_adults']
+                    no_of_children  = user_input['no_of_children']
+                    no_of_days = user_input['no_of_days_requested']
+                    total_price=total_price
+                    room_type=room_data.room_type
+                    c = {
+                        'var_phone': request.session['data']['phone_number'],
+                        'name':name,
+                        'phone_number':phone_number,
+                        'email':email_1,
+                        'check_in':check_in,
+                        'check_out':check_out,
+                        'no_of_rooms':no_of_rooms,
+                        'no_of_adults':no_of_adults,
+                        'no_of_children':no_of_children,
+                        'room_type':room_data.room_type,
+                        'total_price':total_price,
+                        'no_of_days_requested':no_of_days,
+                    }  
+                    text_content = render_to_string('email.txt', c)
+                    html_content = render_to_string('email.html', c)
+
+                    email = EmailMultiAlternatives('Partuma lodge and jazz club booking confirmed', text_content)
+                    email.attach_alternative(html_content, "text/html")
+                    email.to = [email_1]
+                    email.send()
+            
+
+
+
+                    # subject = 'Your Booking is confirmed'
+                    # message = f'Hi {name} your booking has been confirmed\n. Booking Details :\n Phone number: {phone_number}\n Check-in: {check_in} Check-out: {check_out}\n  No of rooms : {no_of_rooms}\n No of adults : {no_of_adults}\n No of children : {no_of_children}\n Room Type : {room_type}\n Total Price: {total_price}'
+                    # email_from = settings.EMAIL_HOST_USER
+                    # recipient_list = [email, ]
+                    # send_mail( subject, message, email_from, recipient_list)
+                    # book_date = user_input['date']
+                    # book_date = book_date.split('-')
+                    # book_date = "-".join(book_date[::-1])
+                    # sak_confirmation(user_input['name'], user_input['mob'], user_input['source'], user_input['to'], book_date, user_input['time'] )
+                    # client_confirmation(user_input['source'], user_input['to'], book_date, user_input['mob'], user_input['time'] )
+                    # messages.success(request, 'Booking Confirmed')
+                    partuma_confirmation(user_input['name'], user_input['phone_number'], room_data.room_type, user_input['no_of_rooms'], user_input['check_in'], user_input['check_out'], str(total_price))
+                    response = redirect('checkout')
+                    return response
+                else:   
+                    context = {
+                    
+                        'var_phone': request.session['data']['phone_number'],
+                    
+                    }
+                    messages.warning(request, 'OTP was wrong!')
+                    response = redirect('verification')
+                    return response
+                
+            else:
+                response = redirect('booking')
+                return response
+        else:
+            user_input = request.session['data']
+            room_data = Rooms.objects.get(id=user_input['type_of_room'])
+            total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
+            context = {
+                    
+                'var_phone': request.session['data']['phone_number'],
+                'user_input':user_input,
+                'room_type':room_data.room_type,
+                'total_price':total_price
+            }
+            response = render(request, 'verification.html', context)
+            return response
+    else:
+        response = redirect('/')
+        return response
+       
+
+# end route : resend_otp
+# Above function resend OTP when user request for new OTP or if OTP expires
+def resend_otp(request):
+    if request.session.get('otp', None):
+        # checks if OTP expired or not
+        if time.time()>request.session['exp']:
+            otp = random.randint(1000,9999)
+            print("otp", otp)
+            request.session['otp']=otp
+            expire_at = time.time() + 20
+            request.session['exp'] = expire_at
+
+            send_sms(otp,request.session['data']['phone_number'])
+            # send_sms(otp,mob)
+            response = redirect('verification')
+            return response
+        else:
+            response = redirect('verification')
+            return response
+    response = redirect('/')
+    return response
 
 # end-route : about  
 def about(request):
@@ -197,5 +399,108 @@ def about(request):
 
 
 
+# end-route : checkout
+def checkout(request):
+    if request.session.get('data', None):
+        user_input = request.session['data']
+        room_data = Rooms.objects.get(id=user_input['type_of_room'])
+        total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
+        context = {
+            'user_input':user_input,
+            'room_type':room_data.room_type,
+            'total_price':total_price
+        }
+        try:
+            del request.session['otp']
+            del request.session['exp']
+        except:
+            pass
+        
+        return render(request, "checkout.html", context)
+    else:
+        return redirect("/")
 
+
+# class GeneratePDF(View):
+#     def get(self, request, *args, **kwargs):
+#         template = get_template('email.html')
+        
+#         user_input = request.session['data']
+#         room_data = Rooms.objects.get(id=user_input['type_of_room'])
+#         total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
+#         name  = user_input['name']
+#         phone_number = user_input['phone_number']
+#         email_1 = user_input['email']
+#         check_in = user_input['check_in']
+#         check_out = user_input['check_out']
+#         no_of_rooms = user_input['no_of_rooms']
+#         no_of_adults  = user_input['no_of_adults']
+#         no_of_children  = user_input['no_of_children']
+#         no_of_days = user_input['no_of_days_requested']
+#         total_price=total_price
+#         room_type=room_data.room_type
+#         context = {
+#             'name':name,
+#             'phone_number':phone_number,
+#             'email':email_1,
+#             'check_in':check_in,
+#             'check_out':check_out,
+#             'no_of_rooms':no_of_rooms,
+#             'no_of_adults':no_of_adults,
+#             'no_of_children':no_of_children,
+#             'room_type':room_type,
+#             'total_price':total_price,
+#             'no_of_days_requested':no_of_days,
+#         }  
+#         request.session.flush()
+        
+#         pdf = render_to_pdf('email.html', context)
+#         print(pdf)
+#         pdf = ",".join(str(pdf))
+#         return HttpResponse(pdf, content_type = 'application/pdf')
+
+
+
+
+class HtmlPdf(FPDF, HTMLMixin):
+    pass
+
+
+def GeneratePDF(request):
+    user_input = request.session['data']
+    room_data = Rooms.objects.get(id=user_input['type_of_room'])
+    total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
+    name  = user_input['name']
+    phone_number = user_input['phone_number']
+    email_1 = user_input['email']
+    check_in = user_input['check_in']
+    check_out = user_input['check_out']
+    no_of_rooms = user_input['no_of_rooms']
+    no_of_adults  = user_input['no_of_adults']
+    no_of_children  = user_input['no_of_children']
+    no_of_days = user_input['no_of_days_requested']
+    total_price=total_price
+    room_type=room_data.room_type
+    context = {
+        'name':name,
+        'phone_number':phone_number,
+        'email':email_1,
+        'check_in':check_in,
+        'check_out':check_out,
+        'no_of_rooms':no_of_rooms,
+        'no_of_adults':no_of_adults,
+        'no_of_children':no_of_children,
+        'room_type':room_type,
+        'total_price':total_price,
+        'no_of_days_requested':no_of_days,
+    }    
+    pdf = HtmlPdf()
+    pdf.add_page()
+    pdf.write_html(render_to_string('pdf.html', context))
+    # pdf.setStyle(TableStyle(colors.white))
+    # pdf.Ln(40)
+    response = HttpResponse(pdf.output(dest='S').encode('latin-1'))
+    response['Content-Type'] = 'application/pdf'
+    # response['Content-Disposition'] = 'attachment; filename=' + "provisional_booking" + '.pdf'
+    return response
 

@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
+* {
+    scroll-behavior: smooth;
+    font-family: 'Poppins', sans-serif;
+}
+.otp-card {
+    max-width: 420px !important;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    height: 400px;
+    position: relative;
+}
+.details-card {
+    max-width: 420px !important;
+    padding: 13px;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    height: 540px;
+    position: relative;
+}
+.verfication-card {
+    max-width: 520px !important;
+    padding: 13px;
+    border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    height: 600px;
+    position: relative;
+}
+.info {
+    height: 100vh;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.container {
+    height: 100vh
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to top right, #ffcc40 -50%, #fa3200b4 100%)
+    /* background: linear-gradient(to left, #ffffff -50%, #ffcc40 65%); */
+}
+
+
+.mobile-text {
+    color: #989696b8;
+    font-size: 15px
+}
+
+.form-control {
+    margin-right: 12px
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #677eff;
+    outline: 0;
+    box-shadow: none
+}
+
+.cursor {
+    cursor: pointer
+}
+
+@media screen and (max-width: 600px) {
+    .otp-card {
+        width: 300px !important;
+        height: 400px;
+    }
+    .details-card {
+        width: 300px !important;
+        height: 1000px !important;
+    }
+    .verfication-card {
+        width: 300px !important;
+        height: 1040px !important;
+    }
+    .container {
+        height: unset;
+    }
+    .info {
+        height: fit-content;
+    }
+    body {
+        height: fit-content;
+    }
+}
