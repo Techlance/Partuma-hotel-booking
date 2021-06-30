@@ -35,9 +35,11 @@
 
 ## STEP-7 : Go to partuma/settings.py
 #### Enter your email_id and password in following code
-```EMAIL_HOST_USER = "your-email"
-EMAIL_HOST_PASSWORD = "your-password"
-```
+
+```EMAIL_HOST_USER = "your-email"```
+
+```EMAIL_HOST_PASSWORD = "your-password"```
+
 
 ## STEP-8 : Go to rooms/views.py
 #### Enter your account_sid and auth_token for twilio in following code
