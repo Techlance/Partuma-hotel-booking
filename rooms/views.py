@@ -1,3 +1,9 @@
+"""Developed by techlance 
+   Date : 24-06-2021 to 30-06-2021"""
+
+
+
+
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -19,7 +25,6 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.shortcuts import HttpResponse
 from django.template.loader import get_template, render_to_string
-
 from fpdf import FPDF, HTMLMixin
 # Create your views here.
 
@@ -40,8 +45,6 @@ def send_sms(otp, to_):
 
 
 def partuma_confirmation(name, mob, room_type, no_of_rooms, checkin_date, checkout_date, price):
-    
-
     # Your Account SID from twilio.com/console
    
     account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
@@ -52,28 +55,26 @@ def partuma_confirmation(name, mob, room_type, no_of_rooms, checkin_date, checko
     client = Client(account_sid, auth_token)
     # print(to_)
     message = client.messages.create(
-        to="+91" + str(7048475675), 
+        to="+91" + str(9099038440), 
         from_="+12512903658",
         body = "Name : " + name + "\nMob : " + mob + "\nRoom Type : " + str(room_type) + "\nNo Of Rooms: " + str(no_of_rooms) + "\nCheckIn Date : " + checkin_date + "\ncheckOut Date : " + checkout_date + "\nPrice : " + str(price) + "\nhas booked a room from your site.")
 
     
 
-
-def client_confirmation(source, destination, book_date, to_, time):
+# Above function will send text message to customer for their booking
+def client_confirmation(name, mob, room_type, no_of_rooms, checkin_date, checkout_date, price):
     
-
     # Your Account SID from twilio.com/console
-    account_sid = "AC86e7e3e3be1be5c09d10f863c1ccccdb"
-    # account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
+    account_sid = "ACb92105d6cb505863a13e05bef39dc8bd"
     # Your Auth Token from twilio.com/console
-    auth_token  = "1d2b1c7b9363dd4b41fc740b2bb3b49a"
-    # auth_token  = "44705a3ce65f65f5c7bffc47e398311e"
+    auth_token  = "44705a3ce65f65f5c7bffc47e398311e"
 
     client = Client(account_sid, auth_token)
+    # print(mob)
     message = client.messages.create(
-        to="+91" + str(to_), 
-        from_="+17864716329",
-        body="Your booking has been confirmed on " + book_date + " from " + source +  " to " + destination + " at " + time +  " with DropTaxiCab. Contact drop taxi team on 9489487288. For Advance payment you can pay using Google Pay / PhonePe / PayTM on 9489487288. Happy Journey!!")
+        to= str(mob), 
+        from_="+12512903658",
+        body="Name : " + name + "\nMob : " + mob + "\nRoom Type : " + str(room_type) + "\nNo Of Rooms: " + str(no_of_rooms) + "\nCheckIn Date : " + checkin_date + "\ncheckOut Date : " + checkout_date + "\nPrice : " + str(price) + "\nyour provisional booking has been confrimed.")
 
 
 # Reusable function to check available dates
@@ -219,7 +220,7 @@ def Booking_Page(request):
     else:
         name = request.POST.get('name')
         phone_number = request.POST.get('phone_number')
-        print(phone_number)
+        # print(phone_number)
         email = request.POST.get('email')
         input_date = request.POST.get('check_in')
         type_of_room = request.POST.get('room_type') 
@@ -249,10 +250,10 @@ def Booking_Page(request):
             # User Data is stored in session till user is verified using OTP
             request.session['data'] = {'name': name, 'phone_number': phone_number, 'email': email ,'check_in': checkin, 'check_out':checkout, 'type_of_room': type_of_room, 'no_of_rooms': no_of_rooms, 'no_of_adults': no_of_adults,'no_of_children': no_of_children, 'no_of_days_requested':no_of_days_requested}
             request.session['otp']=otp
-            expire_at = time.time() + 20   
+            expire_at = time.time() + 300   
             request.session['exp'] = expire_at
             try:
-                print(phone_number)
+                # print(phone_number)
                 send_sms(otp,phone_number)
                 context = {
                         'var_phone': phone_number
@@ -262,7 +263,7 @@ def Booking_Page(request):
             except:
                 request.session.flush()
                 messages.warning(request, 'Please enter a valid phone number')
-                response = redirect('/')
+                response = redirect('booking')
                 return response
 
             
@@ -270,6 +271,7 @@ def Booking_Page(request):
             # if 2-3 three users clicks on book now for same type of room there will be problem so we handled that using above condition
             messages.info("Sorry.We Ran out of rooms!!")
             return redirect("booking")
+
 
 # end route : verification 
 # This function verfies OTP and redirect to checkout page if OTP is validated       
@@ -317,29 +319,20 @@ def verification(request):
                     }  
                     text_content = render_to_string('email.txt', c)
                     html_content = render_to_string('email.html', c)
-
-                    email = EmailMultiAlternatives('Partuma lodge and jazz club booking confirmed', text_content)
-                    email.attach_alternative(html_content, "text/html")
-                    email.to = [email_1]
-                    email.send()
-            
-
-
-
-                    # subject = 'Your Booking is confirmed'
-                    # message = f'Hi {name} your booking has been confirmed\n. Booking Details :\n Phone number: {phone_number}\n Check-in: {check_in} Check-out: {check_out}\n  No of rooms : {no_of_rooms}\n No of adults : {no_of_adults}\n No of children : {no_of_children}\n Room Type : {room_type}\n Total Price: {total_price}'
-                    # email_from = settings.EMAIL_HOST_USER
-                    # recipient_list = [email, ]
-                    # send_mail( subject, message, email_from, recipient_list)
-                    # book_date = user_input['date']
-                    # book_date = book_date.split('-')
-                    # book_date = "-".join(book_date[::-1])
-                    # sak_confirmation(user_input['name'], user_input['mob'], user_input['source'], user_input['to'], book_date, user_input['time'] )
-                    # client_confirmation(user_input['source'], user_input['to'], book_date, user_input['mob'], user_input['time'] )
-                    # messages.success(request, 'Booking Confirmed')
-                    partuma_confirmation(user_input['name'], user_input['phone_number'], room_data.room_type, user_input['no_of_rooms'], user_input['check_in'], user_input['check_out'], str(total_price))
-                    response = redirect('checkout')
-                    return response
+                    try:
+                        email = EmailMultiAlternatives('Partuma lodge and jazz club booking confirmed', text_content)
+                        email.attach_alternative(html_content, "text/html")
+                        email.to = [email_1]
+                        email.send()
+                        partuma_confirmation(user_input['name'], user_input['phone_number'], room_data.room_type, user_input['no_of_rooms'], user_input['check_in'], user_input['check_out'], str(total_price))
+                        client_confirmation(user_input['name'], user_input['phone_number'], room_data.room_type, user_input['no_of_rooms'], user_input['check_in'], user_input['check_out'], str(total_price))
+                        print("success")
+                        response = redirect('checkout')
+                        return response
+                    except:
+                        messages.warning(request, 'Please Enter valid email')
+                        response = redirect('booking')
+                        return response
                 else:   
                     context = {
                     
@@ -380,7 +373,7 @@ def resend_otp(request):
             otp = random.randint(1000,9999)
             print("otp", otp)
             request.session['otp']=otp
-            expire_at = time.time() + 20
+            expire_at = time.time() + 300
             request.session['exp'] = expire_at
 
             send_sms(otp,request.session['data']['phone_number'])
@@ -393,10 +386,10 @@ def resend_otp(request):
     response = redirect('/')
     return response
 
+
 # end-route : about  
 def about(request):
     return render(request, 'about.html')
-
 
 
 # end-route : checkout
@@ -421,52 +414,14 @@ def checkout(request):
         return redirect("/")
 
 
-# class GeneratePDF(View):
-#     def get(self, request, *args, **kwargs):
-#         template = get_template('email.html')
-        
-#         user_input = request.session['data']
-#         room_data = Rooms.objects.get(id=user_input['type_of_room'])
-#         total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
-#         name  = user_input['name']
-#         phone_number = user_input['phone_number']
-#         email_1 = user_input['email']
-#         check_in = user_input['check_in']
-#         check_out = user_input['check_out']
-#         no_of_rooms = user_input['no_of_rooms']
-#         no_of_adults  = user_input['no_of_adults']
-#         no_of_children  = user_input['no_of_children']
-#         no_of_days = user_input['no_of_days_requested']
-#         total_price=total_price
-#         room_type=room_data.room_type
-#         context = {
-#             'name':name,
-#             'phone_number':phone_number,
-#             'email':email_1,
-#             'check_in':check_in,
-#             'check_out':check_out,
-#             'no_of_rooms':no_of_rooms,
-#             'no_of_adults':no_of_adults,
-#             'no_of_children':no_of_children,
-#             'room_type':room_type,
-#             'total_price':total_price,
-#             'no_of_days_requested':no_of_days,
-#         }  
-#         request.session.flush()
-        
-#         pdf = render_to_pdf('email.html', context)
-#         print(pdf)
-#         pdf = ",".join(str(pdf))
-#         return HttpResponse(pdf, content_type = 'application/pdf')
-
-
-
-
 class HtmlPdf(FPDF, HTMLMixin):
     pass
 
 
+# end route : download_pdf
 def GeneratePDF(request):
+
+    # Function to download PDF provisional booking for Room booking
     user_input = request.session['data']
     room_data = Rooms.objects.get(id=user_input['type_of_room'])
     total_price = int(room_data.room_price)*int(user_input['no_of_rooms'])*int(user_input['no_of_days_requested'])
@@ -497,10 +452,7 @@ def GeneratePDF(request):
     pdf = HtmlPdf()
     pdf.add_page()
     pdf.write_html(render_to_string('pdf.html', context))
-    # pdf.setStyle(TableStyle(colors.white))
-    # pdf.Ln(40)
     response = HttpResponse(pdf.output(dest='S').encode('latin-1'))
-    response['Content-Type'] = 'application/pdf'
-    # response['Content-Disposition'] = 'attachment; filename=' + "provisional_booking" + '.pdf'
+    response['Content-Disposition'] = 'attachment; filename=' + "provisional_booking" + '.pdf'
     return response
 
